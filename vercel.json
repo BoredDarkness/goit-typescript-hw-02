@@ -1,14 +1,13 @@
 {
-  "builds": [
+  "headers": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
     }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-
-    { "src": "/.*", "dest": "/index.html" }
   ]
 }

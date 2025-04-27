@@ -1,4 +1,4 @@
-import React, { FC, useState, ChangeEvent, FormEvent } from "react";
+import React, { FC, ChangeEvent, FormEvent, useState } from "react";
 import styles from "./SearchBar.module.css";
 
 interface Props {
@@ -6,13 +6,17 @@ interface Props {
 }
 
 const SearchBar: FC<Props> = ({ onSubmit }) => {
-  const [value, setValue] = useState("");
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+  const [value, setValue] = useState<string>("");
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
-  const handleSubmit = (e: FormEvent) => {
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit(value.trim());
   };
+
   return (
     <header className={styles.searchbar}>
       <form onSubmit={handleSubmit} className={styles.form}>
@@ -20,7 +24,7 @@ const SearchBar: FC<Props> = ({ onSubmit }) => {
           type="text"
           autoComplete="off"
           autoFocus
-          placeholder="Search..."
+          placeholder="Search photos..."
           value={value}
           onChange={handleChange}
           className={styles.input}

@@ -1,16 +1,17 @@
 import React, { FC, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Image } from "../../services/api";
+import { Photo } from "../../services/api";
 import styles from "./ImageModal.module.css";
 
 const modalRoot = document.getElementById("modal-root")!;
 
 interface Props {
-  image: Image;
+  isOpen: boolean;
   onClose: () => void;
+  photo: Photo;
 }
 
-const ImageModal: FC<Props> = ({ image, onClose }) => {
+const ImageModal: FC<Props> = ({ photo, onClose }) => {
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -26,7 +27,11 @@ const ImageModal: FC<Props> = ({ image, onClose }) => {
   return createPortal(
     <div className={styles.backdrop} onClick={handleBackdropClick}>
       <div className={styles.modalContent}>
-        <img src={image.full} alt={image.tags} />
+        <img
+          src={photo.urls.regular}
+          alt={photo.description || "Large view"}
+          className={styles.image}
+        />
       </div>
     </div>,
     modalRoot

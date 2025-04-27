@@ -1,39 +1,46 @@
 import axios from "axios";
 
-export interface RawImage {
-  id: number;
-  webformatURL: string;
-  largeImageURL: string;
-  tags: string;
+export interface RawPhoto {
+  id: string;
+  urls: {
+    small: string;
+    full: string;
+  };
+  alt_description: string | null;
 }
 
-export interface Image {
+export interface Photo {
+  urls: any;
+  tags: string | undefined;
   id: string;
   thumbnail: string;
   full: string;
-  tags: string;
+  description: string;
 }
 
-const BASE_URL = import.meta.env.VITE_PIXABAY_URL
-  ? String(import.meta.env.VITE_PIXABAY_URL)
-  : "https://pixabay.com/api";
-const API_KEY = "44213256-a0da22d27c0a561a4a975a94d";
+const UNSPLASH_API_URL = "https://api.unsplash.com/search/photos";
+const ACCESS_KEY = "kZt3B-JJhRTnGAAid1ALP1CjftogQ-sa63nBeDkcWEg";
+const PER_PAGE = 12;
 
-export async function fetchImages(query: string, page: number) {
-  const { data } = await axios.get<{ hits: RawImage[] }>(BASE_URL, {
+export async function fetchPhotos(
+  query: string,
+  page: number
+): Promise<Photo[]> {
+  const { data } = await axios.get<{ results: RawPhoto[] }>(UNSPLASH_API_URL, {
     params: {
-      key: API_KEY,
-      q: query,
-      image_type: "photo",
-      orientation: "horizontal",
-      per_page: 12,
+      client_id: ACCESS_KEY,
+      query,
       page,
+      per_page: PER_PAGE,
     },
   });
-  return data.hits.map((item) => ({
-    id: String(item.id),
-    thumbnail: item.webformatURL,
-    full: item.largeImageURL,
-    tags: item.tags,
+
+  return data.results.map((item) => ({
+    id: item.id,
+    thumbnail: item.urls.small,
+    full: item.urls.full,
+    description: item.alt_description ?? "No description",
+    urls: item.urls,
+    tags: undefined,
   }));
 }

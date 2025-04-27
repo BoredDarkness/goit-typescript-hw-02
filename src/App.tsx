@@ -1,52 +1,90 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
+import ReactModal from "react-modal";
+
 import SearchBar from "./components/SearchBar/SearchBar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
-import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import Loader from "./components/Loader/Loader";
-import ImageModal from "./components/ImageModal/ImageModal";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
-import { fetchImages, Image } from "./services/api";
-import "./styles.css";
+import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
+import ImageModal from "./components/ImageModal/ImageModal";
+
+import { fetchPhotos, Photo } from "./services/api";
+
+ReactModal.setAppElement("#root");
+
+const PER_PAGE = 12;
 
 const App: React.FC = () => {
   const [query, setQuery] = useState<string>("");
-  const [images, setImages] = useState<Image[]>([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<Image | null>(null);
-
-  const handleSearch = useCallback((q: string) => {
-    setQuery(q);
-    setImages([]);
-    setPage(1);
-  }, []);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   useEffect(() => {
     if (!query) return;
-    setLoading(true);
-    setError(null);
-    fetchImages(query, page)
-      .then((newImgs) => {
-        if (newImgs.length === 0) setError("No images found");
-        setImages((prev) => [...prev, ...newImgs]);
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+
+    const load = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const results = await fetchPhotos(query, page);
+        setPhotos((prev) => (page === 1 ? results : [...prev, ...results]));
+        setTotalPages(page + 1);
+      } catch (err: any) {
+        setError(err.message ?? "Something went wrong...");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    load();
   }, [query, page]);
 
-  const openModal = (img: Image) => setSelected(img);
-  const closeModal = () => setSelected(null);
-  const loadMore = () => setPage((p) => p + 1);
+  const handleSearchSubmit = (searchValue: string) => {
+    if (searchValue === query) return;
+    setQuery(searchValue);
+    setPage(1);
+    setPhotos([]);
+    setTotalPages(0);
+  };
+
+  const handleLoadMore = () => setPage((prev) => prev + 1);
+  const handlePhotoClick = (photo: Photo) => setSelectedPhoto(photo);
+  const closeModal = () => setSelectedPhoto(null);
+
+  const hasMore = page < totalPages;
 
   return (
-    <div className="app">
-      <SearchBar onSubmit={handleSearch} />
-      {error && <ErrorMessage message={error} />}
-      <ImageGallery images={images} onClick={openModal} />
-      {loading && <Loader />}
-      {images.length > 0 && !loading && <LoadMoreBtn onClick={loadMore} />}
-      {selected && <ImageModal image={selected} onClose={closeModal} />}
+    <div>
+      <Toaster position="top-right" />
+      <SearchBar onSubmit={handleSearchSubmit} />
+
+      {error ? (
+        <ErrorMessage message={error} />
+      ) : (
+        <>
+          {photos.length > 0 && (
+            <ImageGallery photos={photos} onPhotoClick={handlePhotoClick} />
+          )}
+          {isLoading && <Loader />}
+          {photos.length > 0 && !isLoading && hasMore && (
+            <LoadMoreBtn onClick={handleLoadMore} />
+          )}
+        </>
+      )}
+
+      {selectedPhoto && (
+        <ImageModal
+          isOpen={!!selectedPhoto}
+          onClose={closeModal}
+          photo={selectedPhoto}
+        />
+      )}
     </div>
   );
 };

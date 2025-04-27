@@ -1,17 +1,17 @@
 import React, { FC } from "react";
-import { Image } from "../../services/api";
+import { Photo } from "../../services/api";
 import ImageCard from "../ImageCard/ImageCard";
 import styles from "./ImageGallery.module.css";
 
 interface Props {
-  images: Image[];
-  onClick: (img: Image) => void;
+  photos: Photo[];
+  onPhotoClick: (photo: Photo) => void;
 }
 
-const ImageGallery: FC<Props> = ({ images, onClick }) => (
+const ImageGallery: FC<Props> = ({ photos, onPhotoClick }) => (
   <ul className={styles.gallery}>
-    {images.map((img) => (
-      <ImageCard key={img.id} image={img} onClick={onClick} />
+    {photos.map((img) => (
+      <ImageCard key={img.id} image={img} onClick={onPhotoClick} />
     ))}
   </ul>
 );
