@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  transition: background-color 0.3s ease;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
