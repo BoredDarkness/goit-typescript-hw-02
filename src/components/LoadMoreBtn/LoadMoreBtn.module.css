@@ -1,26 +1,24 @@
 .btn {
-  display: block; /* щоб можна було margin auto */
-  margin: 20px auto; /* відступ зверху/знизу та центрування */
-  padding: 12px 24px; /* достатній внутрішній відступ */
-  background-color: #1976d2; /* насичений синій (як у решти кнопок) */
-  color: #fff; /* білий текст */
-  font-size: 1rem; /* комфортний розмір шрифту */
-  font-weight: 500; /* трохи жирніший текст */
-  border: none; /* без кордера */
-  border-radius: 8px; /* плавні кути (8px як у карток) */
-  cursor: pointer; /* рука при наведенні */
+  display: block;
+  margin: 20px auto;
+  padding: 12px 24px;
+  background-color: #1976d2;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-/* Ефект при наведенні */
 .btn:hover,
 .btn:focus {
-  background-color: #1565c0; /* темніший синій */
-  transform: translateY(-2px); /* легенький «підскок» */
+  background-color: #1565c0;
+  transform: translateY(-2px);
 }
 
-/* Ефект при натисканні */
 .btn:active {
-  background-color: #115293; /* ще темніший відтінок */
+  background-color: #115293;
   transform: translateY(0);
 }
