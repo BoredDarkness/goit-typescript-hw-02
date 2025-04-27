@@ -17,11 +17,8 @@ export interface Image {
 const API_KEY = "44213256-a0da22d27c0a561a4a975a94d";
 const BASE_URL = "https://pixabay.com/api";
 
-export async function fetchImages(
-  query: string,
-  page: number
-): Promise<Image[]> {
-  const response = await axios.get<{ hits: RawImage[] }>(BASE_URL, {
+export async function fetchImages(query: string, page: number) {
+  const { data } = await axios.get<{ hits: RawImage[] }>(BASE_URL, {
     params: {
       key: API_KEY,
       q: query,
@@ -31,13 +28,10 @@ export async function fetchImages(
       page,
     },
   });
-
-  return response.data.hits.map(
-    ({ id, webformatURL, largeImageURL, tags }) => ({
-      id: id.toString(),
-      thumbnail: webformatURL,
-      full: largeImageURL,
-      tags,
-    })
-  );
+  return data.hits.map((item) => ({
+    id: String(item.id),
+    thumbnail: item.webformatURL,
+    full: item.largeImageURL,
+    tags: item.tags,
+  }));
 }
