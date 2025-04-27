@@ -14,8 +14,8 @@ export interface Image {
   tags: string;
 }
 
+const BASE_URL = "https://pixabay.com/api";
 const API_KEY = "44213256-a0da22d27c0a561a4a975a94d";
-const BASE_URL = "http://pixabay.com/api";
 
 export async function fetchImages(query: string, page: number) {
   const { data } = await axios.get<{ hits: RawImage[] }>(BASE_URL, {
