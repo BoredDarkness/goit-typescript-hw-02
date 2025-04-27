@@ -14,7 +14,9 @@ export interface Image {
   tags: string;
 }
 
-const BASE_URL = "https://pixabay.com/api";
+const BASE_URL = import.meta.env.VITE_PIXABAY_URL
+  ? String(import.meta.env.VITE_PIXABAY_URL)
+  : "https://pixabay.com/api";
 const API_KEY = "44213256-a0da22d27c0a561a4a975a94d";
 
 export async function fetchImages(query: string, page: number) {
