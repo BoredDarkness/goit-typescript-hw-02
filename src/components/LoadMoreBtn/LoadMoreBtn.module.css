@@ -1,25 +1,26 @@
-.container {
-  text-align: center;
-  margin: 24px 0;
+.btn {
+  display: block; /* щоб можна було margin auto */
+  margin: 20px auto; /* відступ зверху/знизу та центрування */
+  padding: 12px 24px; /* достатній внутрішній відступ */
+  background-color: #1976d2; /* насичений синій (як у решти кнопок) */
+  color: #fff; /* білий текст */
+  font-size: 1rem; /* комфортний розмір шрифту */
+  font-weight: 500; /* трохи жирніший текст */
+  border: none; /* без кордера */
+  border-radius: 8px; /* плавні кути (8px як у карток) */
+  cursor: pointer; /* рука при наведенні */
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.button {
-  padding: 10px 20px;
-  background-color: #12c2e9;
-  color: #fff;
-  font-size: 16px;
-  border: none;
-  border-radius: 24px;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* Ефект при наведенні */
+.btn:hover,
+.btn:focus {
+  background-color: #1565c0; /* темніший синій */
+  transform: translateY(-2px); /* легенький «підскок» */
 }
 
-.button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(18, 194, 233, 0.4);
-}
-
-.button:active {
+/* Ефект при натисканні */
+.btn:active {
+  background-color: #115293; /* ще темніший відтінок */
   transform: translateY(0);
-  box-shadow: none;
 }
